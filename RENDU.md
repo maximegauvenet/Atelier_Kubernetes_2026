@@ -58,16 +58,22 @@
 
    ```
 10. Avec l'image `nginx:9.99`, quel statut avait le pod ? Quelle commande vous a donné la cause ?
+    > Le nouveau pod était en ErrImagePull, puis en ImagePullBackOff : Kubernetes n'arrivait pas à télécharger l'image.
     >
+    > La cause m'a été donnée par kubectl describe pod -l app=site, dans la partie « Events » en bas : l'image nginx:9.99 n'existe pas (not found).
 11. Pendant la panne, le site restait-il accessible ? Pourquoi ?
+    > Oui, le site restait accessible.
     >
+    > Pendant une mise à jour, Kubernetes crée d'abord le nouveau pod et ne supprime les anciens que quand le nouveau est prêt. Comme le nouveau pod n'a jamais démarré, les anciens pods en nginx:1.28 ont continué à tourner et à servir le site.
 
 ## Exercice 6 — Portainer & Mario
 
 12. URL publique de votre Mario :
     >
 13. Retrouvez le Deployment `mario` en ligne de commande. Portainer et `kubectl` parlent-ils au même composant ? Lequel ?
+    > On retrouve le Deployment avec kubectl get deploy mario (ou kubectl get deploy mario -o yaml pour le détail). C'est un Deployment normal, comme ceux créés en ligne de commande.
     >
+    > Oui, Portainer et kubectl parlent au même composant : l'API Server du cluster (sur le master). Portainer n'est qu'une interface graphique qui envoie les mêmes demandes que kubectl.
 
 ## Bonus (facultatif)
 
