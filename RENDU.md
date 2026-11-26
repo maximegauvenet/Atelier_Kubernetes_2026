@@ -55,8 +55,12 @@
 
 9. Sur quels nœuds se trouvent vos 3 réplicas ? Collez la sortie de `kubectl get pods -l app=site -o wide`.
    ```
-
+   NAME                    READY   STATUS    RESTARTS   AGE   IP           NODE               NOMINATED NODE   READINESS GATES
+   site-5cc664db9c-7xvh7   1/1     Running   0          24m   10.42.0.28   k3d-lab-agent-0    <none>           <none>
+   site-5cc664db9c-dws7v   1/1     Running   0          25m   10.42.2.10   k3d-lab-server-0   <none>           <none>
+   site-5cc664db9c-sw9kr   1/1     Running   0          24m   10.42.1.36   k3d-lab-agent-1    <none>           <none>
    ```
+   > Les 3 réplicas sont répartis sur les 3 nœuds : un sur k3d-lab-agent-0, un sur k3d-lab-agent-1 et un sur k3d-lab-server-0. Avec k3d, le master accepte aussi des pods, c'est pour ça qu'un réplica s'y retrouve.
 10. Avec l'image `nginx:9.99`, quel statut avait le pod ? Quelle commande vous a donné la cause ?
     > Le nouveau pod était en ErrImagePull, puis en ImagePullBackOff : Kubernetes n'arrivait pas à télécharger l'image.
     >
