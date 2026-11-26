@@ -10,9 +10,13 @@
 ## Exercice 1 — Cluster
 
 1. Combien de nœuds affiche `kubectl get nodes` ? Quel est le rôle de chacun ?
-   >
+   > La commande affiche 3 nœuds, tous au statut Ready :
+   > - k3d-lab-server-0, de rôle control-plane,master : c'est le nœud maître. Il héberge le plan de contrôle (API Server, scheduler, controller manager, base etcd/SQLite) qui reçoit les commandes kubectl, décide où placer les pods et surveille l'état du cluster.
+   > - k3d-lab-agent-0 et k3d-lab-agent-1, de rôle none : ce sont les deux workers. Ils n'ont pas de rôle de pilotage, ils exécutent les pods des applications (via le kubelet et le runtime containerd).
 2. Que montre `docker ps` ? Qu'est-ce qu'un « nœud » dans k3d, concrètement ?
+   > docker ps montre les conteneurs Docker créés par k3d : k3d-lab-server-0, k3d-lab-agent-0 et k3d-lab-agent-1 (image rancher/k3s), plus k3d-lab-serverlb (image k3d-proxy), le load balancer qui publie le port 8081 du Codespace vers le port 80 du cluster. On retrouve donc exactement les 3 nœuds de kubectl get nodes, chacun sous la forme d'un conteneur.
    >
+   > Concrètement, un nœud dans k3d n'est pas une machine physique ou virtuelle : c'est un conteneur Docker qui fait tourner k3s (une distribution Kubernetes légère). Le conteneur server lance k3s en mode serveur (control plane), les conteneurs agent lancent k3s en mode agent (worker). Les pods tournent à l'intérieur de ces conteneurs grâce à leur propre containerd (des conteneurs dans des conteneurs).
 
 ## Exercice 2 — Premier déploiement
 
