@@ -11,33 +11,45 @@
 
 1. Combien de nœuds affiche `kubectl get nodes` ? Quel est le rôle de chacun ?
    > Il y a 3 nœuds :
-   > - k3d-lab-server-0 (control-plane) : c'est le master, il gère le cluster et décide sur quel nœud lancer les pods.
-   > - k3d-lab-agent-0 et k3d-lab-agent-1 : ce sont les deux workers, c'est sur eux que tournent les applications (les pods).
+   > - k3d-lab-server-0 : c'est le master (control-plane). Il gère le cluster et choisit sur quel nœud lancer chaque pod.
+   > - k3d-lab-agent-0 et k3d-lab-agent-1 : ce sont les 2 workers. Ce sont eux qui font tourner les applications (les pods).
 2. Que montre `docker ps` ? Qu'est-ce qu'un « nœud » dans k3d, concrètement ?
-   > docker ps montre un conteneur Docker pour chaque nœud (k3d-lab-server-0, k3d-lab-agent-0, k3d-lab-agent-1), plus un conteneur k3d-lab-serverlb qui sert de load balancer.
+   > docker ps montre un conteneur Docker pour chaque nœud : k3d-lab-server-0, k3d-lab-agent-0 et k3d-lab-agent-1. Il y a aussi un conteneur k3d-lab-serverlb, qui sert de load balancer.
    >
-   > Dans k3d, un nœud n'est donc pas une vraie machine : c'est simplement un conteneur Docker qui fait tourner k3s.
+   > Dans k3d, un nœud n'est donc pas une vraie machine : c'est juste un conteneur Docker qui fait tourner k3s (une version légère de Kubernetes).
 
 ## Exercice 2 — Premier déploiement
 
 3. Quels objets Kubernetes ont été créés par `kubectl create deployment` ? (indice : `kubectl get all`)
+   > La commande a créé 3 objets :
+   > - un Deployment (web) : il décrit ce qu'on veut, ici 1 pod nginx.
+   > - un ReplicaSet (web-...) : créé par le Deployment, il s'assure que le bon nombre de pods tourne.
+   > - un Pod (web-...-...) : c'est lui qui fait tourner le conteneur nginx.
    >
+   > Le Service web, lui, a été créé par kubectl expose, pas par kubectl create deployment.
 4. Vous avez supprimé le pod `web-...` : que s'est-il passé, et pourquoi ?
+   > Un nouveau pod a été recréé tout de suite, avec un nom différent.
    >
+   > C'est le ReplicaSet qui l'a recréé : il doit toujours garder 1 pod en marche. Dès qu'il voit qu'il en manque un, il en relance un nouveau. C'est l'auto-réparation de Kubernetes.
 
 ## Exercice 3 — Modifier un conteneur en direct
 
 5. Après suppression du pod, votre message « Bienvenue... » a-t-il survécu ? Pourquoi ?
+   > Non, le message a disparu et la page « Welcome to nginx! » est revenue.
    >
+   > Le nouveau pod repart de l'image nginx d'origine. Les fichiers modifiés dans un conteneur ne sont pas sauvegardés : quand le pod est supprimé, ses modifications sont perdues.
 6. Pourquoi le `port-forward` a-t-il cessé de fonctionner après la suppression du pod ?
-   >
+   > Parce que le port-forward est relié à un seul pod précis, même si on le lance sur le Service. Quand ce pod est supprimé, le tunnel n'a plus de pod au bout et il s'arrête. Il ne bascule pas tout seul sur le nouveau pod, il faut le relancer.
 
 ## Exercice 4 — Déclaratif
 
 7. Quelle différence entre `kubectl create` et `kubectl apply` ?
-   >
+   > - kubectl create crée un objet à partir d'une commande. Si l'objet existe déjà, il renvoie une erreur. Il ne sert qu'à créer.
+   > - kubectl apply part d'un fichier YAML qui décrit l'état voulu. Si l'objet n'existe pas, il le crée. S'il existe, il le met à jour avec les changements du fichier. On peut donc le relancer autant de fois qu'on veut.
 8. À quoi sert le `selector` d'un Service ? Que se passe-t-il s'il ne correspond à aucun pod ?
+   > Le selector sert au Service à trouver ses pods : il envoie le trafic à tous les pods qui ont le même label (ici app: site).
    >
+   > S'il ne correspond à aucun pod, le Service existe mais n'a aucun pod derrière lui. Le site ne répond pas, et kubectl get endpoints site ne montre aucune adresse.
 
 ## Exercice 5 — Scaling & mises à jour
 
