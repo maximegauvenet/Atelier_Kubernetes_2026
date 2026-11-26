@@ -73,7 +73,7 @@
 ## Exercice 6 — Portainer & Mario
 
 12. URL publique de votre Mario :
-    >
+    > https://sturdy-space-fishstick-7vqxwj45w99rcwwpj-8585.app.github.dev/
 13. Retrouvez le Deployment `mario` en ligne de commande. Portainer et `kubectl` parlent-ils au même composant ? Lequel ?
     > On retrouve le Deployment avec kubectl get deploy mario (ou kubectl get deploy mario -o yaml pour le détail). C'est un Deployment normal, comme ceux créés en ligne de commande.
     >
