@@ -16,7 +16,7 @@
 2. Que montre `docker ps` ? Qu'est-ce qu'un « nœud » dans k3d, concrètement ?
    > docker ps montre un conteneur Docker pour chaque nœud (k3d-lab-server-0, k3d-lab-agent-0, k3d-lab-agent-1), plus un conteneur k3d-lab-serverlb qui sert de load balancer.
    >
-   > Dans k3d, un nœud n'est donc pas une vraie machine : c'est simplement un conteneur Docker qui fait tourner k3s (une version légère de Kubernetes).
+   > Dans k3d, un nœud n'est donc pas une vraie machine : c'est simplement un conteneur Docker qui fait tourner k3s.
 
 ## Exercice 2 — Premier déploiement
 
