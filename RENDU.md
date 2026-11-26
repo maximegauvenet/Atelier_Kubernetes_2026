@@ -2,8 +2,8 @@
 
 > Complétez ce fichier au fil de l'atelier, puis faites un commit et un push (voir la section « Rendu » du README).
 
-**Nom / Prénom :**
-**Groupe :**
+**Nom / Prénom :** GAUVENET-ROBIN Maxime
+**Groupe :** Licence Informatique SRD (Cnam / CFA Campus Montsouris)
 
 ---
 
@@ -86,4 +86,4 @@
 
 ---
 
-**Score obtenu avec `./scripts/check.sh` :** ... / ...
+**Score obtenu avec `./scripts/check.sh` :** 14 / 18
